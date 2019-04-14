@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:gravity="left"
+              android:layout_margin="16dp">
+
+    <TextView
+            android:id="@+id/photo_title_txt_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
+            android:maxLines="2"
+            tools:text="Photo Title"/>
+
+    <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            style="?attr/actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:focusable="true">
+
+        <ImageView
+                android:id="@+id/photo_img_view"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:paddingRight="25dp"
+                android:paddingTop="25dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/edittext_bg"/>
+
+        <ImageView
+                android:id="@+id/photo_remove_badge"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|end|top"
+                android:src="@drawable/remove_photo"
+                android:gravity="center"
+                android:visibility="gone"
+                android:padding="5dp"/>
+
+    </FrameLayout>
+
+</LinearLayout>
