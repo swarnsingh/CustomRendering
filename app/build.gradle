@@ -40,6 +40,8 @@ dependencies {
     implementation 'com.github.nikartm:image-support:1.0.5'
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'

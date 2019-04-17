@@ -1,18 +1,23 @@
 package com.swarn.locusapp.holder
 
+import android.app.Activity
 import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.swarn.locusapp.R
 import com.swarn.locusapp.adapter.CustomRecyclerViewAdapter
+import com.swarn.locusapp.data.CustomView
+
 
 /**
  * @author Swarn Singh.
  */
-class SingleChoiceViewHolder(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
+class SingleChoiceViewHolder(itemView: View, adapter: CustomRecyclerViewAdapter) :
+    BaseViewHolder<CustomView>(itemView, adapter) {
+
+
+    private var mAdapter: CustomRecyclerViewAdapter = adapter
 
     private var questionTitle = itemView.findViewById<TextView>(R.id.question_title_txt_view)!!
 
@@ -21,42 +26,61 @@ class SingleChoiceViewHolder(itemView: View) :
     private var option2 = itemView.findViewById<RadioButton>(R.id.option2)!!
     private var option3 = itemView.findViewById<RadioButton>(R.id.option3)!!
 
-    fun onBind(position: Int, holder: SingleChoiceViewHolder, adapter: CustomRecyclerViewAdapter) {
-        val customView = adapter.getData()!![position]
+    private lateinit var lastRadioButton: RadioButton
 
-        holder.questionTitle.text = customView.title
 
-        holder.option1.text = customView.dataMap!!.options[0]
-        holder.option2.text = customView.dataMap!!.options[1]
-        holder.option3.text = customView.dataMap!!.options[2]
+    override fun onBind(holder: BaseViewHolder<CustomView>, position: Int) {
+        val item = mAdapter.getData()!![position]
 
-        if (customView.value != null) {
-            when (customView.value) {
-                customView.dataMap!!.options[0] -> {
+        (holder as SingleChoiceViewHolder).questionTitle.text = item.title
+
+        holder.option1.text = item.dataMap!!.options[0]
+        holder.option2.text = item.dataMap!!.options[1]
+        holder.option3.text = item.dataMap!!.options[2]
+
+        if (item.value != null && position == adapterPosition) {
+            when (item.value) {
+                item.dataMap!!.options[0] -> {
                     holder.option1.isChecked = true
                 }
-                customView.dataMap!!.options[1] -> {
+                item.dataMap!!.options[1] -> {
                     holder.option2.isChecked = true
                 }
-                customView.dataMap!!.options[2] -> {
+                item.dataMap!!.options[2] -> {
                     holder.option3.isChecked = true
                 }
             }
+            val handler = (itemView.context as Activity).window.decorView.handler
+            handler.post {
+                mAdapter.notifyItemChanged(position)
+            }
+        } else {
+            holder.option1.isChecked = false
+            holder.option2.isChecked = false
+            holder.option3.isChecked = false
         }
 
-        answerRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.option1 -> {
-                    customView.value = adapter.getData()!![position].dataMap?.options?.get(0)
-                }
-                R.id.option2 -> {
-                    customView.value = adapter.getData()!![position].dataMap?.options?.get(1)
-                }
-                R.id.option3 -> {
-                    customView.value = adapter.getData()!![position].dataMap?.options?.get(2)
+        holder.answerRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+
+            if (position == adapterPosition) {
+                when (checkedId) {
+                    R.id.option1 -> {
+                        item.value = item.dataMap?.options?.get(0)
+                        holder.option1.isChecked = true
+                        mAdapter.setData(item, position)
+                    }
+                    R.id.option2 -> {
+                        item.value = item.dataMap?.options?.get(1)
+                        holder.option2.isChecked = true
+                        mAdapter.setData(item, position)
+                    }
+                    R.id.option3 -> {
+                        item.value = item.dataMap?.options?.get(2)
+                        holder.option3.isChecked = true
+                        mAdapter.setData(item, position)
+                    }
                 }
             }
-            adapter.setData(customView, position)
         }
     }
 }

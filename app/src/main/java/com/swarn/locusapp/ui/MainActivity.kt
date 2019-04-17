@@ -18,9 +18,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.swarn.locusapp.R
 import com.swarn.locusapp.adapter.CustomRecyclerViewAdapter
 import com.swarn.locusapp.holder.PhotoViewHolder
+import com.swarn.locusapp.util.DEFAULT_SIZE
 import com.swarn.locusapp.util.PhotoUtil
 import com.swarn.locusapp.viewmodel.CustomViewModel
 import java.io.File
@@ -57,27 +59,15 @@ class MainActivity : AppCompatActivity(), CustomRecyclerViewAdapter.CallbackInte
         val itemDecor = DividerItemDecoration(applicationContext, HORIZONTAL)
         mRecyclerView.addItemDecoration(itemDecor)
 
+        mCustomRecyclerViewAdapter = CustomRecyclerViewAdapter()
+        mRecyclerView.adapter = mCustomRecyclerViewAdapter
+
         mCustomViewModel = ViewModelProviders.of(this).get(CustomViewModel::class.java)
 
         mCustomViewModel.getCustomViewFromJson()?.observe(this, Observer {
-            mCustomRecyclerViewAdapter = CustomRecyclerViewAdapter(this, it)
-            mRecyclerView.adapter = mCustomRecyclerViewAdapter
+            mCustomRecyclerViewAdapter.setData(it)
             mCustomRecyclerViewAdapter.notifyDataSetChanged()
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (::mCustomRecyclerViewAdapter.isInitialized) {
-            mCustomRecyclerViewAdapter.notifyDataSetChanged()
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (::mCustomRecyclerViewAdapter.isInitialized) {
-            mCustomRecyclerViewAdapter.notifyDataSetChanged()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -154,12 +144,16 @@ class MainActivity : AppCompatActivity(), CustomRecyclerViewAdapter.CallbackInte
             if (imgFile.exists()) {
                 val customView = mCustomRecyclerViewAdapter.getData()!![mCurrentPosition]
                 customView.value = currentPhotoPath
+                var sizeInPx = PhotoUtil.convertDpToPx(applicationContext, DEFAULT_SIZE).toInt()
 
-                PhotoUtil.setPic((mHolder as PhotoViewHolder).photoImgView, currentPhotoPath)
+                Picasso.get()
+                    .load(File(customView.value))
+                    .resize(sizeInPx, sizeInPx)
+                    .into((mHolder as PhotoViewHolder).photoImgView)
+
                 (mHolder as PhotoViewHolder).photoRemoveBadge.visibility = View.VISIBLE
 
                 mCustomRecyclerViewAdapter.setData(customView, mCurrentPosition)
-                mCustomRecyclerViewAdapter.notifyDataSetChanged()
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

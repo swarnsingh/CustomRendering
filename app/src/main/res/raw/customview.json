@@ -46,5 +46,101 @@
     "id": "comment2",
     "title": "Photo 2 comments",
     "dataMap": {}
+  },
+  {
+    "type": "PHOTO",
+    "id": "pic3",
+    "title": "Photo 3",
+    "dataMap": {}
+  },
+  {
+    "type": "SINGLE_CHOICE",
+    "id": "choice3",
+    "title": "Photo 3 choice",
+    "dataMap": {
+      "options": [
+        "Good",
+        "OK",
+        "Bad"
+      ]
+    }
+  },
+  {
+    "type": "COMMENT",
+    "id": "comment3",
+    "title": "Photo 3 comments",
+    "dataMap": {}
+  },
+  {
+    "type": "PHOTO",
+    "id": "pic4",
+    "title": "Photo 4",
+    "dataMap": {}
+  },
+  {
+    "type": "SINGLE_CHOICE",
+    "id": "choice4",
+    "title": "Photo 4 choice",
+    "dataMap": {
+      "options": [
+        "Good",
+        "OK",
+        "Bad"
+      ]
+    }
+  },
+  {
+    "type": "COMMENT",
+    "id": "comment4",
+    "title": "Photo 4 comments",
+    "dataMap": {}
+  },
+  {
+    "type": "PHOTO",
+    "id": "pic5",
+    "title": "Photo 5",
+    "dataMap": {}
+  },
+  {
+    "type": "SINGLE_CHOICE",
+    "id": "choice5",
+    "title": "Photo 5 choice",
+    "dataMap": {
+      "options": [
+        "Good",
+        "OK",
+        "Bad"
+      ]
+    }
+  },
+  {
+    "type": "COMMENT",
+    "id": "comment5",
+    "title": "Photo 5 comments",
+    "dataMap": {}
+  },
+  {
+    "type": "PHOTO",
+    "id": "pic6",
+    "title": "Photo 6",
+    "dataMap": {}
+  },
+  {
+    "type": "SINGLE_CHOICE",
+    "id": "choice6",
+    "title": "Photo 6 choice",
+    "dataMap": {
+      "options": [
+        "Good",
+        "OK",
+        "Bad"
+      ]
+    }
+  },
+  {
+    "type": "COMMENT",
+    "id": "comment6",
+    "title": "Photo 6 comments",
+    "dataMap": {}
   }
 ]

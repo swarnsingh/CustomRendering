@@ -1,45 +1,63 @@
 package com.swarn.locusapp.holder
 
+import android.app.Activity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import com.swarn.locusapp.R
 import com.swarn.locusapp.adapter.CustomRecyclerViewAdapter
+import com.swarn.locusapp.data.CustomView
 
 /**
  * @author Swarn Singh.
  */
-class CommentsViewHolder(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
+class CommentsViewHolder(itemView: View, adapter: CustomRecyclerViewAdapter) :
+    BaseViewHolder<CustomView>(itemView, adapter) {
+
+
+    private var mAdapter: CustomRecyclerViewAdapter = adapter
 
     private var commentTitle = itemView.findViewById<TextView>(R.id.comment_title_txt_view)!!
-
-    private var commentSwitch = itemView.findViewById<Switch>(R.id.comment_switch)!!
+    var commentSwitch = itemView.findViewById<Switch>(R.id.comment_switch)!!
     private var commentEditText = itemView.findViewById<EditText>(R.id.comment_edit_txt)!!
 
-    fun onBind(position: Int, holder: CommentsViewHolder, adapter: CustomRecyclerViewAdapter) {
-        val customView = adapter.getData()!![position]
+    override fun onBind(holder: BaseViewHolder<CustomView>, position: Int) {
+        val item = mAdapter.getData()!![position]
+        (holder as CommentsViewHolder).commentTitle.text = item.title
 
-        holder.commentTitle.text = customView.title
-        holder.commentEditText.setText(customView.value)
-
-        commentSwitch.setOnClickListener {
-            if (commentEditText.isVisible) {
-                commentEditText.visibility = View.GONE
-                commentEditText.text = null
-                customView.value = null
-                adapter.setData(customView, position)
+        if (position == adapterPosition) {
+            if (item.value == "") {
+                holder.commentEditText.visibility = View.GONE
+                holder.commentSwitch.isChecked = false
             } else {
-                commentEditText.visibility = View.VISIBLE
+                holder.commentSwitch.isChecked = true
+                holder.commentEditText.visibility = View.VISIBLE
+                holder.commentEditText.setText(item.value)
+            }
+
+        }
+
+        holder.commentSwitch.setOnClickListener {
+
+            if (!holder.commentSwitch.isChecked) {
+                item.value = ""
+                mAdapter.setData(item, position)
+                holder.commentEditText.visibility = View.GONE
+            } else {
+                item.value = null
+                mAdapter.setData(item, position)
+                holder.commentEditText.visibility = View.VISIBLE
+            }
+            val handler = (itemView.context as Activity).window.decorView.handler
+            handler.post {
+                mAdapter.notifyItemChanged(position)
             }
         }
 
-        commentEditText.addTextChangedListener(object : TextWatcher {
+        holder.commentEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -49,8 +67,15 @@ class CommentsViewHolder(itemView: View) :
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                customView.value = s.toString()
-                adapter.setData(customView, position)
+                if (position == adapterPosition) {
+                    if (count > 0) {
+                        item.value = s.toString()
+
+                    } else {
+                        holder.commentSwitch.isChecked = !(holder.commentSwitch.isChecked && item.value == "")
+                    }
+                    mAdapter.setData(item, position)
+                }
             }
         })
     }
